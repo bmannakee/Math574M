@@ -4,13 +4,15 @@
 \usepackage{amsmath}
 \pagestyle{fancyplain}
 \begin{document}
-\lhead{Math 571B\\ Homework 1}
+\lhead{Math 574M\\ Homework 1}
 \rhead{Brian Mannakee\\ \today}
 
 
 \SweaveOpts{concordance=TRUE}
 
 
-hello
+\begin{enumerate}
+  \item This is a change
+\end{enumerate}
 
 \end{document}
