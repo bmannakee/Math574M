@@ -6,7 +6,7 @@
 \begin{document}
 \lhead{Math 574M\\ Homework 1}
 \rhead{Brian Mannakee\\ \today}
-
+\renewcommand{\vec}[1]{\mathbf{#1}}
 
 \SweaveOpts{concordance=TRUE}
 
@@ -49,7 +49,28 @@
       \begin{enumerate}
         \item The posterior mean is the mean of $beta(y+\alpha,n-y+\beta)$ which is
         $$\hat{p}=\frac{y+\alpha}{\alpha + \beta + n}=\frac{\sum_{i=1}^{n}X_i+\alpha}{\alpha + \beta + n}//$$
-        \item Find 
+        \item Decompose MSE = $E(p-\hat{p})^2$ into bias and variance:
+         \begin{eqnarray*}
+            Var_p(\hat{p}) + Bias_p(\hat{p}) &=& Var_p\left(\frac{\frac{\sum_{i=1}^{n}X_i+\alpha}{\alpha + \beta + n}+\alpha}{\alpha + \beta + n}\right) + (E_p\left(\frac{\sum_{i=1}^{n}X_i+\alpha}{\alpha + \beta + n}\right)-p)^2\\
+                                             &=& \frac{1}{(\alpha + \beta + n)^2}Var_p\left(\sum_{i=1}^{n}X_i\right) + \left(\frac{E_p\left(\sum_{i=1}^{n}X_i\right)+\alpha}{\alpha + \beta + n}-p\right)^2 \\
+                                             &=& \frac{np(1-p)}{\alpha + \beta + n)^2} + \left(\frac{np + \alpha}{\alpha + \beta + n} -p\right)^2 \text{because} \sum_{i=1}^{n}X_i\sim \text{binomial(n,p)}
+         \end{eqnarray*}
+        \item Let $\alpha = \beta = \sqrt{n/4}$ then $$\hat{p}=\frac{\sum_{i=1}^{n}X_i+\sqrt{n/4}}{\sqrt{n/4} + \sqrt{n/4} + n}=\frac{\sum_{i=1}^{n}X_i+\sqrt{n/4}}{\sqrt{n} + n}//$$\\
+          \begin{eqnarray*}
+            R(p,\hat{p}) &=& \frac{np(1-p)}{\alpha + \beta + n)^2} + \left(\frac{np + \alpha}{\alpha + \beta + n} -p\right)^2 \\
+                         &=& \frac{np-np^2}{(\alpha + \beta + n)^2} + \left(\frac{np + \alpha - p\alpha - p\beta - np}{(\alpha + \beta + n)}\right)^2\\
+                         &=& \frac{np-np^2}{(\alpha + \beta + n)^2} + \frac{(\alpha - p(\alpha +\beta))^2}{(\alpha + \beta + n)^2}\\
+                         &=& \frac{np - np^2 + \alpha^2 - 2p\alpha(\alpha + \beta) + p^2(\alpha + \beta)^2}{(\alpha + \beta + n)^2} \\
+                         &=& \frac{np - np^2 + \frac{n}{4} - np + np^2}{(n + \sqrt{n})^2} \\
+                         &=& \frac{n}{4(n+\sqrt{n})^2}// \\
+          \end{eqnarray*}
+      \end{enumerate}
+    \item
+      \begin{enumerate}
+        \item $m(x) = \int_\Theta f(x,\theta) d\theta = \int_\Theta f(x|\theta)\pi(\theta) d\theta$
+        \item \begin{eqnarray*}
+                r_B(\pi,\hat{\theta}(\vec{X})) = x
+              \end{eqnarray*}
       \end{enumerate}
 \end{enumerate}
 
