@@ -18,7 +18,7 @@ source('prob1.r')
   \item X is a continuous random variable with F(X),f(x)
     \begin{enumerate}
       \item \begin{eqnarray*}E(X-a)^2 &=& E[X^2 - 2aX + a^2]\\ &=& E(X^2) -2aE(X) + a^2\end{eqnarray*}
-          To minimize, take the first derivative with respect a and set equal to zero. Then take the second derivative with respect to a and check that the sign is positive.
+          To minimize, take the first derivative with respect to a and set equal to zero. Then take the second derivative with respect to a and check that the sign is positive.
             \begin{eqnarray*}\frac{d}{da}[E(X^2) - 2aE(X) + a^2] &=& 0 \\ 2E(X) + 2a &=& 0 \\ a &=& E(X)\\
             \frac{d}{da}[2E(X) + 2a] &=& 2 \end{eqnarray*}
             Therefore $a=E(X)$ is a minimum
@@ -29,19 +29,17 @@ source('prob1.r')
                                     0 &=& \int_{-\infty}^a f(x)dx - \int_a^\infty f(x)dx \\
               \int_{-\infty}^a f(x)dx &=& \int_a^\infty f(x)dx \\
                                       \end{eqnarray*}
-            This equality only holds when a is the median of the distribution. In addition $d^2/da^2 = 2f(a) > 0$ so the median is the minimu,.
+            This equality only holds when a is the median of the distribution. In addition $d^2/da^2 = 2f(a) > 0$ so the median is the minimum.
     \end{enumerate}
   \item If $X_1,\dots,X_n$ are i.i.d Bernoulli(p) then $Y = \sum X_i \sim $ Binomial(n,p). If $p \sim beta(\alpha,\beta)$ then their joint pdf is
     \begin{eqnarray*}
         f(y,p) &=& \left[{n \choose y}p^y(1-p)^{n-y}\right] \left[\frac{\Gamma(\alpha + \beta)}{\Gamma(\alpha)\Gamma(
         beta)}p^{\alpha-1}(1-p)^{\beta-1}\right]\\
-               &=& {n \choose y}\frac{\Gamma(\alpha + \beta)}{\Gamma(\alpha)\Gamma(
-        beta)}p^{y+\alpha-1}(1-p)^{n-y+\beta-1}
+               &=& {n \choose y}\frac{\Gamma(\alpha + \beta)}{\Gamma(\alpha)\Gamma(\beta)}p^{y+\alpha-1}(1-p)^{n-y+\beta-1}
     \end{eqnarray*}
     We get the marginal of y by integrating out p from the joint distribution.
     \begin{eqnarray*}
-      f(y) &=& \int_0^1{n \choose y}\frac{\Gamma(\alpha + \beta)}{\Gamma(\alpha)\Gamma(
-        beta)}p^{y+\alpha-1}(1-p)^{n-y+\beta-1}dp \\
+      f(y) &=& \int_0^1{n \choose y}\frac{\Gamma(\alpha + \beta)}{\Gamma(\alpha)\Gamma(\beta)}p^{y+\alpha-1}(1-p)^{n-y+\beta-1}dp \\
            &=&{n \choose y}\frac{\Gamma(\alpha + \beta)}{\Gamma(\alpha)\Gamma(\beta)}\int_0^1 p^{y+\alpha-1}(1-p)^{n-y+\beta-1}dp \\
            &=&{n \choose y}\frac{\Gamma(\alpha + \beta)}{\Gamma(\alpha)\Gamma(\beta)}\frac{\Gamma(y+\alpha)\Gamma(n-y+\beta)}{\Gamma(n + \alpha + \beta)}  \text{By definition of the Beta function}
     \end{eqnarray*}
@@ -54,7 +52,7 @@ source('prob1.r')
         $$\hat{p}=\frac{y+\alpha}{\alpha + \beta + n}=\frac{\sum_{i=1}^{n}X_i+\alpha}{\alpha + \beta + n}//$$
         \item Decompose MSE = $E(p-\hat{p})^2$ into bias and variance:
          \begin{eqnarray*}
-            Var_p(\hat{p}) + Bias_p(\hat{p}) &=& Var_p\left(\frac{\frac{\sum_{i=1}^{n}X_i+\alpha}{\alpha + \beta + n}+\alpha}{\alpha + \beta + n}\right) + (E_p\left(\frac{\sum_{i=1}^{n}X_i+\alpha}{\alpha + \beta + n}\right)-p)^2\\
+            Var_p(\hat{p}) + Bias_p(\hat{p}) &=& Var_p\left(\frac{\frac{\sum_{i=1}^{n}X_i+\alpha}{\alpha + \beta + n}+\alpha}{\alpha + \beta + n}\right) + \left(E_p\left(\frac{\sum_{i=1}^{n}X_i+\alpha}{\alpha + \beta + n}\right)-p\right)^2\\
                                              &=& \frac{1}{(\alpha + \beta + n)^2}Var_p\left(\sum_{i=1}^{n}X_i\right) + \left(\frac{E_p\left(\sum_{i=1}^{n}X_i\right)+\alpha}{\alpha + \beta + n}-p\right)^2 \\
                                              &=& \frac{np(1-p)}{\alpha + \beta + n)^2} + \left(\frac{np + \alpha}{\alpha + \beta + n} -p\right)^2 \text{because} \sum_{i=1}^{n}X_i\sim \text{binomial(n,p)}
          \end{eqnarray*}
