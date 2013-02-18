@@ -87,7 +87,7 @@ s2train.green <- data.frame(s2train.green)
 #colnames(s2train.green) <- c('x','y')
 s2train.green$Class <- 1
 
-# Create Scenario Two data frame
+# Create Scenario Two test and training data frames
 scenario.2.test <- rbind(s2test.green,s2test.red)
 scenario.2.train <- rbind(s2train.green,s2train.red)
 
