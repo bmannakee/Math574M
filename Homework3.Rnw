@@ -1,10 +1,12 @@
 \documentclass{article}
 \usepackage[top=2in, bottom=1in, left=1in, right=1in]{geometry}
+\usepackage[utf8]{inputenc}
 \usepackage{fancyhdr}
 \usepackage{amsmath}
 \usepackage{booktabs}
 \pagestyle{fancyplain}
 \begin{document}
+\SweaveOpts{concordance=TRUE}
 \lhead{Math 574M\\ Homework 3}
 \rhead{Brian Mannakee\\ \today}
 \renewcommand{\vec}[1]{\mathbf{#1}}
