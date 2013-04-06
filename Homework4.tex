@@ -1,0 +1,95 @@
+\documentclass{article}
+\usepackage[top=2in, bottom=1in, left=1in, right=1in]{geometry}
+\usepackage{fancyhdr}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\pagestyle{fancyplain}
+\usepackage{Sweave}
+\begin{document}
+\lhead{Math 574M\\ Homework 3}
+\rhead{Brian Mannakee\\ \today}
+\renewcommand{\vec}[1]{\mathbf{#1}}
+\newcommand{\ovec}[1]{\mathbf{\Omega_{#1}}}
+\newcommand{\normfront}[1]{(#1\pi)^{-\frac{1}{2}}}
+
+\input{Homework4-concordance}
+
+%<<cacheSweave,echo=FALSE,results=hide,cache=T>>=
+%library(cacheSweave)
+%source('prob3.r')
+
+
+%@
+
+\begin{enumerate}
+  \item[2.6] Consider points distributed in a p-dimensional unit ball. The median distance to the point closest to the center of the ball is given by the inverse CDF of the first order statistic of $R \sim Unif[0,1]$
+  $$ median = F_{R_{(1)}}^{-1} $$
+  Given that the CDF of $R_{(1)}$ is related to $P(R_i \ge r)$ by
+  $$ 1 - F_{R_{(1)}}(r) = \prod_{i=1}^N P(R_i \ge r) = \prod_{i=1}^N 1-P(R_i \le r) $$
+  $P(R_i \le r)$ for points uniformly distributed in the unit sphere is given by the ratio of the volume of a sphere with radius $r \in [0,1]$ to the volume of the unit sphere, and we previously derived a formula for the volume of a p-dimensional sphere $V_p(r)$, so
+  $$ P(R_i \le r) = \frac{V_p(r)}{V_p(1)} = \frac{\frac{\pi^{p/2}r^p}{\Gamma(1 + \frac{p}{2})}}{\frac{\pi^{p/2}1^p}{\Gamma(1 + \frac{p}{2})}} = r^p$$
+  Combining the above we have
+  \begin{eqnarray*}
+    F_{R_{(1)}}(r) &=& 1- (1-r^p)^N \\
+    F_{R_{(1)}}^{-1}(x) &=& (1-x^{1/N})^{1/p} \\
+    F_{R_{(1)}}^{-1}\left(\frac{1}{2}\right) &=& \left(1-\frac{1}{2}^{1/N}\right)^{1/p} //
+  \end{eqnarray*}
+  \item[3.3]
+    \begin{enumerate}
+      \item Let $c^Ty$ be an unbiased estimator of $a^T\beta$. Then
+      \begin{eqnarray*}
+        E(c^Ty) &=& a^T\beta \\
+        c^TE(y) &=& a^T\beta \\
+        cX^T\beta &=& a^T\beta
+      \end{eqnarray*}
+      Which requires that $c^TX = a^T$. Now we can write $Var(c^Ty) = Var(c^Ty - a^T\hat\beta + a^T\hat\beta)$ and simplify
+      \begin{eqnarray*}
+        Var(c^Ty - a^T\hat\beta + a^T\hat\beta) &=& Var(c^Ty - a^T\hat\beta) + 2Cov(c^Ty - a^T\hat\beta,a^T\hat\beta) + Var(a^T\hat\beta) \\        
+      \end{eqnarray*}
+      Which is greater than or equal to $Var(a^T\hat\beta)$ if $Cov(c^Ty - a^T\hat\beta,a^T\hat\beta) = 0$.
+      \begin{eqnarray*}
+        Cov(c^Ty - a^T\hat\beta,a^T\hat\beta) &=& Cov(c^Ty-a^T(X^TX)^{-1}X^Ty,a^T\hat\beta) \\
+                                              &=& (c^T-a^T(X^TX)^{-1}X^T)Cov(y)(a^T(X^TX)^{-1}X^T)^T \\
+                                              &=& \sigma^2\vec{I}(c^T-a^T(X^TX)^{-1}X^T)(X(X^TX)^{-1}a) \\
+                                              &=& \sigma^2\vec{I}(c^TX(X^TX)^{-1}a - a^T(X^TX)^{-1}X^TX(X^TX)^{-1}a) \\
+                                              &=& \sigma^2\vec{I}(c^TX(X^TX)^{-1}a - a^T(X^TX)^{-1}a) \\
+                                              &=& \sigma^2\vec{I}(a^T(X^TX)^{-1}a - a^T(X^TX)^{-1}a) \text{ substituting from above} \\
+                                              &=& 0
+      \end{eqnarray*}
+      So $Var(c^Ty) \ge Var(a^T\hat\beta)$ for any unbiased estimator $c^Ty$ of $a^T\beta$, where $a^T\hat\beta$ is the OLS estimator of $a^T\beta$. 
+    \end{enumerate}
+    \item[3.7]
+      \begin{eqnarray*}
+        \pi(\vec{\beta}|\vec{y}) &=& \frac{\prod_{i=1}^N\prod_{j=1}^p f_y(y_i|\beta_j)\prod_{j=1}^p\pi(\beta_j)}{m(y)} \\
+                                 &\propto& exp\left[-\frac{1}{2}\frac{\sum_{i=1}^N(y_i - \beta_0 - \sum_{j=1}^px_{ij}^T\beta_j)^2}{\sigma^2}\right]
+                                        + exp\left[-\frac{1}{2}\frac{\sum_{j=1}^p\beta_j^2}{\tau^2}\right] \\
+                                 &\propto& exp\left[-\frac{1}{2}\frac{\sum_{i=1}^N(y_i - \beta_0 - \sum_{j=1}^px_{ij}^T\beta_i)^2}{\sigma^2} 
+                                        + -\frac{1}{2}\frac{\sum_{j=1}^p\beta_i^2}{\tau^2}\right] \\
+   log(\pi(\vec{\beta}|\vec{y})) &\propto& -\frac{1}{2\sigma^2\tau^2}\tau^2\sum_{i=1}^{N}(y_i - \beta_0 - \sum_{j=1}^px_{ij}^T\beta_i)^2 + \sigma^2\sum_{j=1}^p\beta_i^2 \\
+  -log(\pi(\vec{\beta}|\vec{y})) &\propto& \sum_{i=1}^{N}(y_i - \beta_0 - \sum_{j=1}^px_{ij}^T\beta_i)^2 + \frac{\sigma^2}{\tau^2}\sum_{j=1}^p\beta_i^2 //\\
+      \end{eqnarray*}
+\end{enumerate}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\end{document}
+
+
+
+
+
+
+

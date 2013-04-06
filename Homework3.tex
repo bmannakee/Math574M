@@ -1,0 +1,147 @@
+\documentclass{article}
+\usepackage[top=2in, bottom=1in, left=1in, right=1in]{geometry}
+\usepackage{fancyhdr}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\pagestyle{fancyplain}
+\usepackage{Sweave}
+\begin{document}
+\lhead{Math 574M\\ Homework 3}
+\rhead{Brian Mannakee\\ \today}
+\renewcommand{\vec}[1]{\mathbf{#1}}
+\newcommand{\ovec}[1]{\mathbf{\Omega_{#1}}}
+\newcommand{\normfront}[1]{(#1\pi)^{-\frac{1}{2}}}
+
+\input{Homework3-concordance}
+
+%<<cacheSweave,echo=FALSE,results=hide,cache=T>>=
+%library(cacheSweave)
+%source('prob3.r')
+
+
+%@
+
+\begin{enumerate}
+  \item[2.6] We wish to find a function $f(x)$ such that $f$ minimizes $\sum\limits_{i=1}^N (y_i-f(x_i))^2$, and we are told that some or all of the observations have identical $x$ values. Let $(x_i^*,\dots,x_k^*)$ be the unique values of $x$, indexed from $1$ to $K$, and $N_i = \{j: x_j = x_i^*\}$ be the set of indices of $x$ which map to $x_i^*$. This gives:
+  \begin{eqnarray*}
+    \sum\limits_{i=1}^{K}\sum\limits_{j\in N_i}(y_j-f(x_i^*))^2 &=& \sum\limits_{i=1}^{K}\sum\limits_{j\in N_i}(y_j^2 - 2f(x_i^*)y_j + f(x_i^*)^2) \\
+                                                               &=& \sum\limits_{i=1}^{K}\left[\sum\limits_{j\in N_i}y_j^2 - 2f(x_i^*)\sum\limits_{j\in N_i}y_j + |N_i|f(x_i^*)^2\right] \\
+                                                               &=& \sum\limits_{i=1}^{K}\left[\sum\limits_{j\in N_i}y_j^2 - 2f(x_i^*)|N_i|\bar{y_i} + |N_i|f(x_i^*)^2\right] \\
+                                                               &=& \sum\limits_{i=1}^{K}\sum\limits_{j\in N_i}y_i^2 - \sum\limits_{i=1}^{K}\left[|N_i|f(x_i^*)^2-2f(x_i^*)|N_i|\bar{y_i} +|N_i|\bar{y_i}^2 -|N_i|\bar{y_i}^2\right] \\
+                                                               &=& \sum\limits_{i=1}^{K}\sum\limits_{j\in N_i}y_i^2 - \sum\limits_{i=1}^{K}\left[|N_i|(f(x_i^*)-\bar{y_i})^2\right] - \sum\limits_{i=1}^{K}|N_i|\bar{y_i}^2 \\
+  \end{eqnarray*}
+  Leaving us to minimize $\sum\limits_{i=1}^{K}\left[|N_i|(f(x_i^*)-\bar{y_i})^2\right]$ which is a weighted least squares problem on the reduced data set $(x_1,\dots,x_k)$
+  \item[2.7]
+    \begin{enumerate}
+      \item If $\hat{f}(x_i)$ is a linear function, then for arbitrary $\vec{x_0}=(x_1,\dots,x_n)\in\chi$ we have
+        \begin{eqnarray*}
+          \hat{f}(\vec{x_0}) &=& \hat{\beta}_0 + \hat{\beta}_1\vec{x_0} \\
+                             &=& \vec{\hat{\beta}x_0} \\
+                             &=& \vec{[1\:x_0^T](X^TX)^{-1}X^T}\vec{y} \\
+                             &=& \sum\limits_{i=1}^{N}\vec{[1\:x_0^T](X^TX)^{-1}X^T}y_i
+        \end{eqnarray*}
+        Which is a linear estimator in $y_i$ with $l_i(x;\chi) = \vec{[1\:x_0^T](X^TX)^{-1}X^T}$.
+        
+        On the other hand, if $\hat{f}(x_i)$ is a K-nearest neighbor function, \\ then for arbitrary $\vec{x_0}=(x_1,\dots,x_n)\in\chi$ we have
+        \begin{eqnarray*}
+          \hat{f}(\vec{x_0}) &=& \sum\limits_{i\in N_{K}(\vec{x_0})}\frac{y_i}{K} \\
+                             &=& \sum\limits_{i=1}^{N}\frac{1}{K}I(y_i \in N_K(\vec{x_0}))
+        \end{eqnarray*}
+        Which is a linear estimator in $y_i$ with $l_i(x;\chi) =\frac{1}{K}$.
+        \newpage
+      \item $E_{Y|X}\left[(f(\vec{x_0}) - \hat{f}(\vec{x_0}))^2\right] = Var_{Y|X}\left[\hat{f}(\vec{x_0}))\right] + \left(E_{y|x}\hat{f}(\vec{x_0})-f(x_0)\right)^2$ \\\\
+      
+      In the case where the estimator is a weighted sum of the $y_i$'s we have \\\\    
+      $E_{Y|X}\left[\hat{f}(\vec{x_0})\right] = \sum\limits_{i=1}^{n}l_iE[y_i] = \sum\limits_{i=1}^{n}l_i\hat{f}(\vec{x_i})$ and $Var_{Y|X}\left[\hat{f}(\vec{x_0})\right] = \sum\limits_{i=1}^{n}l_i^2\sigma^2$ \\\\
+      So we have:\\
+      $Var_{Y|X} = \sum\limits_{i=1}^{n}l_i^2\sigma^2$\\
+      $Bias_{Y|X} = \sum\limits_{i=1}^{n}l_i\hat{f}(\vec{x_i}) - f(\vec{x_0})$
+    \end{enumerate}
+    
+  \item[2.8] The training and testing error of the K-nearest neighbor classifier on digits 2 and 3 from the zip code data is
+%<<echo=FALSE,results=tex>>=
+%print(table1)
+%@  
+  \item[4]
+    \begin{enumerate}
+      \item The training and testing error of the K-nearest neighbor classifier on digits 1,2 and 3 from the zip code data is
+%<<echo=FALSE,results=tex>>=
+%print(table2)
+
+%@
+      \item The training error for the LDA classifier on digits 1,2,and 3 is signif(lda.train2.error,2) and the testing error is signif(lda.test2.error,2)
+
+    \end{enumerate}
+  \item[5] 
+    \begin{enumerate}
+      \item The decision rule for a binary classification is a function $\hat{f}(\vec{x})$ such that $\hat{f}(\vec{x}) = 1$ if the ratio of the posterior probability masses for class one vs. class two at $\vec{x}$ is greater than 1, and 2 otherwise. Here we know the posterior masses exactly, so we can calculate the Bayes decision rule. 
+      \begin{eqnarray*}
+          \frac{(2\pi\vec{|\Sigma_1|})^{-\frac{1}{2}}exp\left[-\frac{1}{2}(\vec{x}-\vec{\mu_1})^T\vec{\Sigma_1^{-1}}(\vec{x}-\vec{\mu_1})\right]}{(2\pi\vec{|\Sigma_2|})^{-\frac{1}{2}}exp\left[-\frac{1}{2}(\vec{x}-\vec{\mu_2})^T\vec{\Sigma_2^{-1}}(\vec{x}-\vec{\mu_2})\right]} &>& 1 \\
+          \frac{exp\left[-\frac{1}{2}(\vec{x}-\vec{\mu_1})^T\vec{\Sigma_1^{-1}}(\vec{x}-\vec{\mu_1})\right]}{exp\left[-\frac{1}{2}(\vec{x}-\vec{\mu_2})^T\vec{\Sigma_2^{-1}}(\vec{x}-\vec{\mu_2})\right]} &>& \left(\frac{\vec{|\Sigma_2|}}{\vec{|\Sigma_1|}}\right)^{-\frac{1}{2}} \\
+        (\vec{x}-\vec{\mu_1})^T\vec{\Sigma_1^{-1}}(\vec{x}-\vec{\mu_1})-(\vec{x}-\vec{\mu_2})^T\vec{\Sigma_2^{-1}}(\vec{x}-\vec{\mu_2}) &<& log\left(\frac{\vec{|\Sigma_2|}}{\vec{|\Sigma_1|}}\right)
+      \end{eqnarray*}
+      So $\hat{f}(\vec{x}) = 1$ if $(\vec{x}-\vec{\mu_1})^T\vec{\Sigma_1^{-1}}(\vec{x}-\vec{\mu_1})-(\vec{x}-\vec{\mu_2})^T\vec{\Sigma_2^{-1}}(\vec{x}-\vec{\mu_2}) < 1.386$ and $2$ otherwise.
+      \newpage
+      \item The Bayes, LDA, and QDA training and testing error percentages for 200 training and 2000 testing points from the scenario in part (a), with equal class priors.
+%<<echo=FALSE,results=tex>>=
+%print(table3)
+%@
+    \end{enumerate}
+  \item[4.2]
+    \begin{enumerate}
+      \item LDA assumes that each class comes from a multivariate gaussian distribution, and that the classes have equal covariance. Let $\pi_1=P(Y=1)$ and $\pi_2=P(Y=2)$, and $\vec{X|Y} ~ N(\mu_i,\vec{\Sigma})$. The LDA classifies to 2 when we have
+      \begin{eqnarray*}
+        \frac{P(Y=2|\vec{X=x})}{P(Y=1|\vec{X=x})} &>& 1 \\
+        \frac{\pi_2(2\pi\vec{\Sigma})^{-\frac{1}{2}}exp\left[-\frac{1}{2}(\vec{x}-\vec{\mu_2})^T\vec{\Sigma}^{-1}(\vec{x}-\vec{\mu_2})\right]}{\pi_1(2\pi\vec{\Sigma})^{-\frac{1}{2}}exp\left[-\frac{1}{2}(\vec{x}-\vec{\mu_1})^T\vec{\Sigma}^{-1}(\vec{x}-\vec{\mu_1})\right]} &>& 1 \\
+        \frac{exp\left[-\frac{1}{2}(\vec{x}-\vec{\mu_2})^T\vec{\Sigma}^{-1}(\vec{x}-\vec{\mu_2})\right]}{exp\left[-\frac{1}{2}(\vec{x}-\vec{\mu_1})^T\vec{\Sigma}^{-1}(\vec{x}-\vec{\mu_1})\right]} &>& \frac{\pi_1}{\pi_2} \\
+        \left[-\frac{1}{2}(\vec{x}-\vec{\mu_2})^T\vec{\Sigma}^{-1}(\vec{x}-\vec{\mu_2})\right] - \left[-\frac{1}{2}(\vec{x}-\vec{\mu_1})^T\vec{\Sigma}^{-1}(\vec{x}-\vec{\mu_1})\right] &>& log(\pi_1) - log(\pi_2) \\
+      \end{eqnarray*}
+      We can multiply this out, cancelling the $\vec{x}^T\vec{\Sigma}\vec{x}$ terms, using the symmetry of the covariance matrix to combine the $\vec{x}^T\vec{\Sigma}\vec{\mu_2}$ and $\vec{\mu_2}^T\vec{\Sigma}\vec{x}$ terms, and we get
+      \begin{eqnarray*}
+        \left(\vec{x}^T\vec{\Sigma}\vec{\mu_2} - \vec{x}^T\vec{\Sigma}\vec{\mu_1}\right) -\frac{1}{2}\left(\vec{\mu_2}^T\vec{\Sigma}\vec{\mu_2} - \vec{\mu_1}^T\vec{\Sigma}\vec{\mu_1}\right)  &>& log(\pi_1) - log(\pi_2) \\
+        \vec{x}^T\vec{\Sigma}\left(\vec{\mu_2} - \vec{\mu_1}\right) &>& \frac{1}{2}\vec{\mu_2}^T\vec{\Sigma}\vec{\mu_2} - \frac{1}{2}\vec{\mu_1}^T\vec{\Sigma}\vec{\mu_1} + log\left(\frac{N_1}{N}\right) - log\left(\frac{N_2}{N}\right) \\
+      \end{eqnarray*}
+      As required.
+    \item We wish to minimize $\sum\limits_{i=1}^{N}(y_i - \beta_0 - \beta_1 x_i)^2 = \sum\limits_{i=1}^{N}(y_i - \vec{\beta}x_i)^2$ in terms of $\beta$. This is just an OLS minimization and we know that $\vec{\beta}$ will satisfy
+    $$ \vec{X^TX\beta} = \vec{X^Ty} $$
+    which is in the same form as the equation which is our target. The matrices $\vec{X}$ and $\vec{Y}$ are 
+    $$ \vec{X} = \left[
+        \begin{matrix}
+          1 & 1 & \ldots & 1 \\
+          x_1 & x_2 & \ldots & x_n
+        \end{matrix}
+      \right]
+   $$
+   $$
+      \vec{Y} = \left[
+        \begin{matrix}
+          -\frac{N}{N_1} & -\frac{N}{N_1} & \ldots & \frac{N}{N_2} & \frac{N}{N_2}
+        \end{matrix}
+      \right]
+   $$
+    \end{enumerate}
+\end{enumerate}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\end{document}
+
+
+
+
+
+
+
