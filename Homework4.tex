@@ -6,7 +6,7 @@
 \pagestyle{fancyplain}
 \usepackage{Sweave}
 \begin{document}
-\lhead{Math 574M\\ Homework 3}
+\lhead{Math 574M\\ Homework 4}
 \rhead{Brian Mannakee\\ \today}
 \renewcommand{\vec}[1]{\mathbf{#1}}
 \newcommand{\ovec}[1]{\mathbf{\Omega_{#1}}}
@@ -14,12 +14,6 @@
 
 \input{Homework4-concordance}
 
-%<<cacheSweave,echo=FALSE,results=hide,cache=T>>=
-%library(cacheSweave)
-%source('prob3.r')
-
-
-%@
 
 \begin{enumerate}
   \item[2.6] Consider points distributed in a p-dimensional unit ball. The median distance to the point closest to the center of the ball is given by the inverse CDF of the first order statistic of $R \sim Unif[0,1]$
@@ -68,7 +62,58 @@
    log(\pi(\vec{\beta}|\vec{y})) &\propto& -\frac{1}{2\sigma^2\tau^2}\tau^2\sum_{i=1}^{N}(y_i - \beta_0 - \sum_{j=1}^px_{ij}^T\beta_i)^2 + \sigma^2\sum_{j=1}^p\beta_i^2 \\
   -log(\pi(\vec{\beta}|\vec{y})) &\propto& \sum_{i=1}^{N}(y_i - \beta_0 - \sum_{j=1}^px_{ij}^T\beta_i)^2 + \frac{\sigma^2}{\tau^2}\sum_{j=1}^p\beta_i^2 //\\
       \end{eqnarray*}
-\end{enumerate}
+    \item
+      \begin{enumerate}
+        \item For the best subset estimator, we can see in the picture that what we are doing is setting a minimum absolute threshhold for values of $\hat{\beta_j}$ such that for any estimator, if it's absolute value is below the value of the estimator at which we set the threshhold $\hat{\beta_{(M)}}$ we set it to zero.\\ Mathematically $\hat{\beta_j} = \hat{\beta_j}\cdot\vec{I}(|\hat{\beta_j}| \ge |\hat{\beta_{(M)}}|)$
+        \item We can write $\vec{\hat{\beta}^{ridge}} = \vec{(X^TX + \lambda I)^{-1}X^Ty}$ as in equation 3.44 in the book. In the orthogonal case $\vec{X^TX} = \vec{I}$ and it follows that $\vec{\hat{\beta^{ls}}} =  \vec{X^Ty}$. We thus have $\vec{\hat{\beta}^{ridge}} = \vec{\hat{\beta}^{ls}}(\vec{I} + \lambda\vec{I})^{-1}$, and for any j $\hat{\beta}_j^{ridge} = \frac{\hat{\beta}_j^{ls}}{1 + \lambda}$
+          \item For the Lasso we need to find a solution for $min_{\beta_j} F(\beta_j)$ where $F(\beta_j) = (\beta_j - \tilde{\beta_j})^2 + \lambda|\beta_j|$. Because we can't take the derivative of the absolute value function we break $F$ into two functions such that 
+        $$
+          F(\beta_j) = \left\{ \begin{array}{lcl}F_1(\beta_j) =  (\beta_j - \tilde{\beta_j})^2 + \lambda \beta_j & & \beta_j \ge 0\\
+                                          F_2(\beta_j) =  (\beta_j - \tilde{\beta_j})^2 - \lambda \beta_j & & \beta_j < 0
+                        \end{array}
+                        \right.
+        $$
+        Mulitplying these out and completing the square we get 
+        $$
+        F(\beta_j) = \left\{ \begin{array}{lcl}F_1(\beta_j) =  [\beta_j - (\tilde{\beta_j} - \frac{\lambda}{2})]^2 + \tilde{\beta}_j^2 - (\grave{\beta} -\frac{\lambda}{2}) & & \beta_j \ge 0\\
+                                          F_2(\beta_j) =  [\beta_j - (\tilde{\beta_j} + \frac{\lambda}{2})]^2 + \tilde{\beta}_j^2 - (\grave{\beta} +\frac{\lambda}{2}) & & \beta_j < 0
+                        \end{array}
+                        \right.
+        $$
+        Taking derivatives and setting equal to zero we get
+        $$
+        min_{\beta_j}F(\beta_j) = \left\{ \begin{array}{l} min_{\beta_j}F_1(\beta_j) = \tilde{\beta}_j - \frac{\lambda}{2}\\
+                                          min_{\beta_j}F_2(\beta_j) = \tilde{\beta}_j + \frac{\lambda}{2}
+                        \end{array}
+                        \right.
+        $$
+        Now we have three scenarios to consider. 
+          \begin{enumerate}
+            \item If $\tilde{\beta}_j < \frac{\lambda}{2}$ both functions are minimized at a value greater than zero, but since $F_2$ only takes values less than zero it has a min at zero. So we have $F_1(\tilde{\beta}_j - \frac{\lambda}{2}) = \tilde{\beta}_j^2 - (\tilde{\beta}_j - \frac{\lambda}{2})^2 < F_2(0) = \tilde{\beta}_j^2$ so $\hat{\beta}_j^{lasso} = \tilde{\beta}_j - \frac{\lambda}{2}$
+            \item if $-\frac{\lambda}{2} < \tilde{\beta}_j < \frac{\lambda}{2}$ $F_1$ is at a minimum to the left of the origin and $F_2$ is at a minimum to the right, so in their ranges each has a minimum at $\hat{\beta}_j = 0$. The way we set up the problem, using $F_1$ when $\beta = 0$, we have $\hat{\beta}_j^{lasso} = \tilde{\beta}_j - \frac{\lambda}{2}$
+            \item if $\tilde{\beta}_j > \frac{\lambda}{2}$ then both functions have a minimum to the left of the origin and by the opposite of the reasoning in (i) we have $\hat{\beta}_j^{lasso} = \tilde{\beta}_j + \frac{\lambda}{2}$
+          \end{enumerate}
+          So these are the solutions to the lasso. We can combine them to get Sign$(\hat{\beta}_j)(|\hat{\beta}_j| - \lambda)_+$
+      \end{enumerate}
+      \item Performing prediction using various variable selection techniques we get the following results. Code is in the included file mannakee\_homework4.r. The lasso appears to perform best from both a test error and error variance standpoint.
+      
+% latex table generated in R 2.15.1 by xtable 1.7-1 package
+% Sat Apr 13 15:36:27 2013
+\begin{table}[ht]
+\centering
+\begin{tabular}{rrr}
+  \hline
+ & Mean Squared Error & Standard Error \\ 
+  \hline
+Linear model & 0.52 & 0.73 \\ 
+  Ridge regression & 0.51 & 0.72 \\ 
+  Exhaustive best subset selection & 0.52 & 0.73 \\ 
+  Forward best subset regression & 0.52 & 0.73 \\ 
+  Lasso & 0.46 & 0.68 \\ 
+   \hline
+\end{tabular}
+\caption{Results of variable selection for prostate data}
+\end{table}\end{enumerate}
 
 
 
